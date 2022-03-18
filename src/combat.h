@@ -25,10 +25,6 @@
 #include "map.h"
 #include "baseevents.h"
 
-#include <utility>
-#include <valarray>
-
-class Condition;
 class Creature;
 class Item;
 

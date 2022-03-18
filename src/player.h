@@ -37,8 +37,8 @@
 #include "mounts.h"
 #include "storeinbox.h"
 
-#include <bitset>
 
+class DepotChest;
 class House;
 class NetworkMessage;
 class Weapon;

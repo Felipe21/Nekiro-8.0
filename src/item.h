@@ -27,10 +27,14 @@
 #include "tools.h"
 #include <typeinfo>
 
-#include <boost/variant.hpp>
-#include <deque>
+
 
 class Creature;
+class BedItem;
+class Container;
+class Door;
+class MagicField;
+class Mailbox;
 class Player;
 class Container;
 class Depot;

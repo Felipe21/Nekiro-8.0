@@ -20,9 +20,13 @@
 #ifndef FS_TASKS_H
 #define FS_TASKS_H
 
-#include <condition_variable>
+//<<<<<<< HEAD
+//#include <condition_variable>
+//#include "thread_holder_base.h"
+//#include "enums.h"
+//=======
 #include "thread_holder_base.h"
-#include "enums.h"
+//>>>>>>> f80456ea (Move all system & boost headers to PCH (#4022))
 
 using TaskFunc = std::function<void(void)>;
 const int DISPATCHER_TASK_EXPIRATION = 2000;
