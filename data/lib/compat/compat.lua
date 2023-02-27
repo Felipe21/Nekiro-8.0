@@ -1514,19 +1514,6 @@ do
 	end
 end
 
-do
-	local stats = {
-		[STAT_MAXHITPOINTS] = 'hitpoints',
-		[STAT_MAXMANAPOINTS] = 'mana',
-		[STAT_SOULPOINTS] = 'soul points',
-		[STAT_MAGICPOINTS] = 'magic level'
-	}
-
-	function getStatName(stat)
-		return stats[stat] or 'unknown'
-	end
-end
-
 function indexToCombatType(idx)
 	return bit.lshift(1, idx)
 end
