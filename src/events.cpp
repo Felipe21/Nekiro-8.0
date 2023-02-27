@@ -20,12 +20,11 @@
 #include "otpch.h"
 
 #include "events.h"
+#include "tools.h"
 #include "item.h"
 #include "player.h"
 
-
-//#include <set>
-
+#include <set>
 
 Events::Events() :
 	scriptInterface("Event Interface")
@@ -53,7 +52,7 @@ bool Events::load()
 		const std::string& className = eventNode.attribute("class").as_string();
 		auto res = classes.insert(className);
 		if (res.second) {
-			const std::string& lowercase = boost::algorithm::to_lower_copy(className);
+			const std::string& lowercase = asLowerCaseString(className);
 			if (scriptInterface.loadFile("data/events/scripts/" + lowercase + ".lua") != 0) {
 				std::cout << "[Warning - Events::load] Can not load script: " << lowercase << ".lua" << std::endl;
 				std::cout << scriptInterface.getLastLuaError() << std::endl;

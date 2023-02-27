@@ -3950,12 +3950,13 @@ int LuaScriptInterface::luaIsScriptsInterface(lua_State* L)
 	return 1;
 }
 
-std::string LuaScriptInterface::escapeString(std::string s)
+std::string LuaScriptInterface::escapeString(const std::string& string)
 {
-	boost::algorithm::replace_all(s, "\\", "\\\\");
-	boost::algorithm::replace_all(s, "\"", "\\\"");
-	boost::algorithm::replace_all(s, "'", "\\'");
-	boost::algorithm::replace_all(s, "[[", "\\[[");
+	std::string s = string;
+	replaceString(s, "\\", "\\\\");
+	replaceString(s, "\"", "\\\"");
+	replaceString(s, "'", "\\'");
+	replaceString(s, "[[", "\\[[");
 	return s;
 }
 
@@ -4727,7 +4728,7 @@ int LuaScriptInterface::luaGameCreateMonsterType(lua_State* L)
 
 	MonsterType* monsterType = g_monsters.getMonsterType(name, false);
 	if (!monsterType) {
-		monsterType = &g_monsters.monsters[boost::algorithm::to_lower_copy(name)];
+		monsterType = &g_monsters.monsters[asLowerCaseString(name)];
 		monsterType->name = name;
 		monsterType->nameDescription = "a " + name;
 	} else {
@@ -14396,7 +14397,7 @@ int LuaScriptInterface::luaLootSetId(lua_State* L)
 			loot->lootBlock.id = getNumber<uint16_t>(L, 2);
 		} else {
 			auto name = getString(L, 2);
-			auto ids = Item::items.nameToItems.equal_range(boost::algorithm::to_lower_copy(name));
+			auto ids = Item::items.nameToItems.equal_range(asLowerCaseString(name));
 
 			if (ids.first == Item::items.nameToItems.cend()) {
 				std::cout << "[Warning - Loot:setId] Unknown loot item \"" << name << "\". " << std::endl;
@@ -15114,7 +15115,7 @@ int LuaScriptInterface::luaSpellCreate(lua_State* L)
 			return 1;
 		}
 
-		std::string tmp = boost::algorithm::to_lower_copy(arg);
+		std::string tmp = asLowerCaseString(arg);
 		if (tmp == "instant") {
 			spellType = SPELL_INSTANT;
 		} else if (tmp == "rune") {
@@ -16227,7 +16228,7 @@ int LuaScriptInterface::luaCreatureEventType(lua_State* L)
 	CreatureEvent* creature = getUserdata<CreatureEvent>(L, 1);
 	if (creature) {
 		std::string typeName = getString(L, 2);
-		std::string tmpStr = boost::algorithm::to_lower_copy(typeName);
+		std::string tmpStr = asLowerCaseString(typeName);
 		if (tmpStr == "login") {
 			creature->setEventType(CREATURE_EVENT_LOGIN);
 		} else if (tmpStr == "logout") {
@@ -16322,7 +16323,7 @@ int LuaScriptInterface::luaMoveEventType(lua_State* L)
 	MoveEvent* moveevent = getUserdata<MoveEvent>(L, 1);
 	if (moveevent) {
 		std::string typeName = getString(L, 2);
-		std::string tmpStr = boost::algorithm::to_lower_copy(typeName);
+		std::string tmpStr = asLowerCaseString(typeName);
 		if (tmpStr == "stepin") {
 			moveevent->setEventType(MOVE_EVENT_STEP_IN);
 			moveevent->stepFunction = moveevent->StepInField;
@@ -16403,7 +16404,7 @@ int LuaScriptInterface::luaMoveEventSlot(lua_State* L)
 	}
 
 	if (moveevent->getEventType() == MOVE_EVENT_EQUIP || moveevent->getEventType() == MOVE_EVENT_DEEQUIP) {
-		std::string slotName = boost::algorithm::to_lower_copy(getString(L, 2));
+		std::string slotName = asLowerCaseString(getString(L, 2));
 		if (slotName == "head") {
 			moveevent->setSlot(SLOTP_HEAD);
 		} else if (slotName == "necklace") {
@@ -16497,7 +16498,7 @@ int LuaScriptInterface::luaMoveEventVocation(lua_State* L)
 		}
 		if (showInDescription) {
 			if (moveevent->getVocationString().empty()) {
-				tmp = boost::algorithm::to_lower_copy(getString(L, 2));
+				tmp = asLowerCaseString(getString(L, 2));
 				tmp += "s";
 				moveevent->setVocationString(tmp);
 			} else {
@@ -16507,7 +16508,7 @@ int LuaScriptInterface::luaMoveEventVocation(lua_State* L)
 				} else {
 					tmp += ", ";
 				}
-				tmp += boost::algorithm::to_lower_copy(getString(L, 2));
+				tmp += asLowerCaseString(getString(L, 2));
 				tmp += "s";
 				moveevent->setVocationString(tmp);
 			}
@@ -16640,7 +16641,7 @@ int LuaScriptInterface::luaGlobalEventType(lua_State* L)
 	GlobalEvent* global = getUserdata<GlobalEvent>(L, 1);
 	if (global) {
 		std::string typeName = getString(L, 2);
-		std::string tmpStr = boost::algorithm::to_lower_copy(typeName);
+		std::string tmpStr = asLowerCaseString(typeName);
 		if (tmpStr == "startup") {
 			global->setEventType(GLOBALEVENT_STARTUP);
 		} else if (tmpStr == "shutdown") {
@@ -16833,7 +16834,7 @@ int LuaScriptInterface::luaWeaponAction(lua_State* L)
 	Weapon* weapon = getUserdata<Weapon>(L, 1);
 	if (weapon) {
 		std::string typeName = getString(L, 2);
-		std::string tmpStr = boost::algorithm::to_lower_copy(typeName);
+		std::string tmpStr = asLowerCaseString(typeName);
 		if (tmpStr == "removecount") {
 			weapon->action = WEAPONACTION_REMOVECOUNT;
 		} else if (tmpStr == "removecharge") {
@@ -17049,7 +17050,7 @@ int LuaScriptInterface::luaWeaponElement(lua_State* L)
 	if (weapon) {
 		if (!getNumber<CombatType_t>(L, 2)) {
 			std::string element = getString(L, 2);
-			std::string tmpStrValue = boost::algorithm::to_lower_copy(element);
+			std::string tmpStrValue = asLowerCaseString(element);
 			if (tmpStrValue == "earth") {
 				weapon->params.combatType = COMBAT_EARTHDAMAGE;
 			} else if (tmpStrValue == "ice") {
@@ -17102,7 +17103,7 @@ int LuaScriptInterface::luaWeaponVocation(lua_State* L)
 
 		if (showInDescription) {
 			if (weapon->getVocationString().empty()) {
-				tmp = boost::algorithm::to_lower_copy(getString(L, 2));
+				tmp = asLowerCaseString(getString(L, 2));
 				tmp += "s";
 				weapon->setVocationString(tmp);
 			} else {
@@ -17112,7 +17113,7 @@ int LuaScriptInterface::luaWeaponVocation(lua_State* L)
 				} else {
 					tmp += ", ";
 				}
-				tmp += boost::algorithm::to_lower_copy(getString(L, 2));
+				tmp += asLowerCaseString(getString(L, 2));
 				tmp += "s";
 				weapon->setVocationString(tmp);
 			}
@@ -17370,7 +17371,7 @@ int LuaScriptInterface::luaWeaponExtraElement(lua_State* L)
 
 		if (!getNumber<CombatType_t>(L, 3)) {
 			std::string element = getString(L, 3);
-			std::string tmpStrValue = boost::algorithm::to_lower_copy(element);
+			std::string tmpStrValue = asLowerCaseString(element);
 			if (tmpStrValue == "earth") {
 				it.abilities.get()->elementType = COMBAT_EARTHDAMAGE;
 			} else if (tmpStrValue == "ice") {
