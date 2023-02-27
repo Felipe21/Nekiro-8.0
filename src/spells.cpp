@@ -1,12 +1,27 @@
-// Copyright 2022 The Forgotten Server Authors. All rights reserved.
-// Use of this source code is governed by the GPL-2.0 License that can be found in the LICENSE file.
+/**
+ * The Forgotten Server - a free and open-source MMORPG server emulator
+ * Copyright (C) 2019  Mark Samman <mark.samman@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 #include "otpch.h"
 
 #include "combat.h"
 #include "configmanager.h"
 #include "game.h"
-#include "luavariant.h"
 #include "monster.h"
 #include "pugicast.h"
 #include "spells.h"
@@ -84,7 +99,7 @@ TalkActionResult_t Spells::playerSaySpell(Player* player, std::string& words)
 
 void Spells::clearMaps(bool fromLua)
 {
-	for (auto instant = instants.begin(); instant != instants.end();) {
+	for (auto instant = instants.begin(); instant != instants.end(); ) {
 		if (fromLua == instant->second.fromLua) {
 			instant = instants.erase(instant);
 		} else {
@@ -92,7 +107,7 @@ void Spells::clearMaps(bool fromLua)
 		}
 	}
 
-	for (auto rune = runes.begin(); rune != runes.end();) {
+	for (auto rune = runes.begin(); rune != runes.end(); ) {
 		if (fromLua == rune->second.fromLua) {
 			rune = runes.erase(rune);
 		} else {
@@ -281,11 +296,12 @@ bool CombatSpell::castSpell(Creature* creature)
 {
 	if (scripted) {
 		LuaVariant var;
+		var.type = VARIANT_POSITION;
 
 		if (needDirection) {
-			var.setPosition(Spells::getCasterPosition(creature, creature->getDirection()));
+			var.pos = Spells::getCasterPosition(creature, creature->getDirection());
 		} else {
-			var.setPosition(creature->getPosition());
+			var.pos = creature->getPosition();
 		}
 
 		return executeCastSpell(creature, var);
@@ -308,15 +324,18 @@ bool CombatSpell::castSpell(Creature* creature, Creature* target)
 		LuaVariant var;
 
 		if (combat->hasArea()) {
+			var.type = VARIANT_POSITION;
+
 			if (needTarget) {
-				var.setPosition(target->getPosition());
+				var.pos = target->getPosition();
 			} else if (needDirection) {
-				var.setPosition(Spells::getCasterPosition(creature, creature->getDirection()));
+				var.pos = Spells::getCasterPosition(creature, creature->getDirection());
 			} else {
-				var.setPosition(creature->getPosition());
+				var.pos = creature->getPosition();
 			}
 		} else {
-			var.setNumber(target->getID());
+			var.type = VARIANT_NUMBER;
+			var.number = target->getID();
 		}
 		return executeCastSpell(creature, var);
 	}
@@ -561,10 +580,10 @@ bool Spell::playerSpellCheck(Player* player) const
 		return false;
 	}
 
-	if ((aggressive || pzLock) && (range < 1 || (range > 0 && !player->getAttackedCreature())) && player->getSkull() == SKULL_BLACK) {
+	/*if ((aggressive || pzLock) && (range < 1 || (range > 0 && !player->getAttackedCreature())) && player->getSkull() == SKULL_BLACK) {
 		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
 		return false;
-	}
+	}*/
 
 	if ((aggressive || pzLock) && player->hasCondition(CONDITION_PACIFIED)) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
@@ -670,7 +689,7 @@ bool Spell::playerInstantSpellCheck(Player* player, const Position& toPos)
 		g_game.map.setTile(toPos, tile);
 	}
 
-	if (blockingCreature && tile->getBottomVisibleCreature(player)) {
+	if (blockingCreature && tile->getBottomVisibleCreature(player) != nullptr) {
 		player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);
 		g_game.addMagicEffect(player->getPosition(), CONST_ME_POFF);
 		return false;
@@ -860,7 +879,8 @@ bool InstantSpell::playerCastInstant(Player* player, std::string& param)
 	LuaVariant var;
 
 	if (selfTarget) {
-		var.setNumber(player->getID());
+		var.type = VARIANT_NUMBER;
+		var.number = player->getID();
 	} else if (needTarget || casterTargetOrDirection) {
 		Creature* target = nullptr;
 		bool useDirection = false;
@@ -922,15 +942,19 @@ bool InstantSpell::playerCastInstant(Player* player, std::string& param)
 				return false;
 			}
 
-			var.setNumber(target->getID());
+			var.type = VARIANT_NUMBER;
+			var.number = target->getID();
 		} else {
-			var.setPosition(Spells::getCasterPosition(player, player->getDirection()));
+			var.type = VARIANT_POSITION;
+			var.pos = Spells::getCasterPosition(player, player->getDirection());
 
-			if (!playerInstantSpellCheck(player, var.getPosition())) {
+			if (!playerInstantSpellCheck(player, var.pos)) {
 				return false;
 			}
 		}
 	} else if (hasParam) {
+		var.type = VARIANT_STRING;
+
 		if (getHasPlayerNameParam()) {
 			Player* playerTarget = nullptr;
 			ReturnValue ret = g_game.getPlayerByNameWildcard(param, playerTarget);
@@ -961,15 +985,17 @@ bool InstantSpell::playerCastInstant(Player* player, std::string& param)
 			}
 		}
 
-		var.setString(param);
+		var.text = param;
 	} else {
+		var.type = VARIANT_POSITION;
+
 		if (needDirection) {
-			var.setPosition(Spells::getCasterPosition(player, player->getDirection()));
+			var.pos = Spells::getCasterPosition(player, player->getDirection());
 		} else {
-			var.setPosition(player->getPosition());
+			var.pos = player->getPosition();
 		}
 
-		if (!playerInstantSpellCheck(player, var.getPosition())) {
+		if (!playerInstantSpellCheck(player, var.pos)) {
 			return false;
 		}
 	}
@@ -1005,15 +1031,18 @@ bool InstantSpell::castSpell(Creature* creature)
 				return false;
 			}
 
-			var.setNumber(target->getID());
+			var.type = VARIANT_NUMBER;
+			var.number = target->getID();
 			return internalCastSpell(creature, var);
 		}
 
 		return false;
 	} else if (needDirection) {
-		var.setPosition(Spells::getCasterPosition(creature, creature->getDirection()));
+		var.type = VARIANT_POSITION;
+		var.pos = Spells::getCasterPosition(creature, creature->getDirection());
 	} else {
-		var.setPosition(creature->getPosition());
+		var.type = VARIANT_POSITION;
+		var.pos = creature->getPosition();
 	}
 
 	return internalCastSpell(creature, var);
@@ -1023,7 +1052,8 @@ bool InstantSpell::castSpell(Creature* creature, Creature* target)
 {
 	if (needTarget) {
 		LuaVariant var;
-		var.setNumber(target->getID());
+		var.type = VARIANT_NUMBER;
+		var.number = target->getID();
 		return internalCastSpell(creature, var);
 	}
 	return castSpell(creature);
@@ -1157,19 +1187,22 @@ bool RuneSpell::executeUse(Player* player, Item* item, const Position&, Thing* t
 	LuaVariant var;
 
 	if (needTarget) {
-		if (!target) {
+		var.type = VARIANT_NUMBER;
+
+		if (target == nullptr) {
 			Tile* toTile = g_game.map.getTile(toPosition);
 			if (toTile) {
 				const Creature* visibleCreature = toTile->getBottomVisibleCreature(player);
 				if (visibleCreature) {
-					var.setNumber(visibleCreature->getID());
+					var.number = visibleCreature->getID();
 				}
 			}
 		} else {
-			var.setNumber(target->getCreature()->getID());
+			var.number = target->getCreature()->getID();
 		}
 	} else {
-		var.setPosition(toPosition);
+		var.type = VARIANT_POSITION;
+		var.pos = toPosition;
 	}
 
 	if (!internalCastSpell(player, var, isHotkey)) {
@@ -1178,15 +1211,13 @@ bool RuneSpell::executeUse(Player* player, Item* item, const Position&, Thing* t
 
 	postCastSpell(player);
 
-	if (var.isNumber()) {
-		target = g_game.getCreatureByID(var.getNumber());
-		if (getPzLock() && target) {
-			player->onAttackedCreature(target->getCreature());
-		}
+	target = g_game.getCreatureByID(var.number);
+	if (getPzLock() && target) {
+		player->onAttackedCreature(target->getCreature());
 	}
 
 	if (hasCharges && item && g_config.getBoolean(ConfigManager::REMOVE_RUNE_CHARGES)) {
-		int32_t newCount = std::max<int32_t>(0, item->getItemCount() - 1);
+		int32_t newCount = std::max<int32_t>(0, item->getSubType() - 1);
 		g_game.transformItem(item, item->getID(), newCount);
 	}
 	return true;
@@ -1195,14 +1226,16 @@ bool RuneSpell::executeUse(Player* player, Item* item, const Position&, Thing* t
 bool RuneSpell::castSpell(Creature* creature)
 {
 	LuaVariant var;
-	var.setNumber(creature->getID());
+	var.type = VARIANT_NUMBER;
+	var.number = creature->getID();
 	return internalCastSpell(creature, var, false);
 }
 
 bool RuneSpell::castSpell(Creature* creature, Creature* target)
 {
 	LuaVariant var;
-	var.setNumber(target->getID());
+	var.type = VARIANT_NUMBER;
+	var.number = target->getID();
 	return internalCastSpell(creature, var, false);
 }
 
