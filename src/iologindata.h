@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_IOLOGINDATA_H
-#define FS_IOLOGINDATA_H
+#ifndef FS_IOLOGINDATA_H_28B0440BEC594654AC0F4E1A5E42B2EF
+#define FS_IOLOGINDATA_H_28B0440BEC594654AC0F4E1A5E42B2EF
 
 #include "account.h"
 #include "player.h"
@@ -66,4 +66,4 @@ class IOLoginData
 		static bool saveItems(const Player* player, const ItemBlockList& itemList, DBInsert& query_insert, PropWriteStream& propWriteStream);
 };
 
-#endif // FS_IOLOGINDATA_H
+#endif

@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_GAME_H
-#define FS_GAME_H
+#ifndef FS_GAME_H_3EC96D67DD024E6093B3BAC29B7A6D7F
+#define FS_GAME_H_3EC96D67DD024E6093B3BAC29B7A6D7F
 
 #include "account.h"
 #include "combat.h"
@@ -613,4 +613,4 @@ class Game
 		bool useLastStageLevel = false;
 };
 
-#endif // FS_GAME_H
+#endif

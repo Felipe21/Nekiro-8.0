@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_INBOX_H
-#define FS_INBOX_H
+#ifndef FS_INBOX_H_C3EF10190329447883B9C3479234EE5C
+#define FS_INBOX_H_C3EF10190329447883B9C3479234EE5C
 
 #include "container.h"
 
@@ -45,4 +45,5 @@ class Inbox final : public Container
 		}
 };
 
-#endif // FS_INBOX_H
+#endif
+

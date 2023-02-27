@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_SCHEDULER_H
-#define FS_SCHEDULER_H
+#ifndef FS_SCHEDULER_H_2905B3D5EAB34B4BA8830167262D2DC1
+#define FS_SCHEDULER_H_2905B3D5EAB34B4BA8830167262D2DC1
 
 #include "tasks.h"
 #include <unordered_map>
@@ -69,4 +69,4 @@ class Scheduler : public ThreadHolder<Scheduler>
 
 extern Scheduler g_scheduler;
 
-#endif // FS_SCHEDULER_H
+#endif

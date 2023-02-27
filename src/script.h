@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef FS_SCRIPT_H
-#define FS_SCRIPT_H
+#ifndef FS_SCRIPTS_H
+#define FS_SCRIPTS_H
 
 #include "luascript.h"
 #include "enums.h"
@@ -37,4 +37,4 @@ class Scripts
 		LuaScriptInterface scriptInterface;
 };
 
-#endif // FS_SCRIPT_H
+#endif
