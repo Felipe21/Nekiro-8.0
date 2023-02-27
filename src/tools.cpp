@@ -22,9 +22,6 @@
 #include "tools.h"
 #include "configmanager.h"
 
-#include <chrono>
-
-
 extern ConfigManager g_config;
 
 void printXMLError(const std::string& where, const std::string& fileName, const pugi::xml_parse_result& result)

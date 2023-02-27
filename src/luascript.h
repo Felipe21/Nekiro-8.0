@@ -20,10 +20,11 @@
 #ifndef FS_LUASCRIPT_H
 #define FS_LUASCRIPT_H
 
-#include "database.h"
-#include "enums.h"
-#include "position.h"
-
+#if __has_include("luajit/lua.hpp")
+#include <luajit/lua.hpp>
+#else
+#include <lua.hpp>
+#endif
 
 #if LUA_VERSION_NUM >= 502
 #ifndef LUA_COMPAT_ALL

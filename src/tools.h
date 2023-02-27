@@ -20,10 +20,12 @@
 #ifndef FS_TOOLS_H
 #define FS_TOOLS_H
 
+#include <random>
+#include <string_view>
+
+#include "position.h"
 #include "const.h"
 #include "enums.h"
-#include "position.h"
-//>>>>>>> f80456ea (Move all system & boost headers to PCH (#4022))
 
 void printXMLError(const std::string& where, const std::string& fileName, const pugi::xml_parse_result& result);
 
