@@ -18,7 +18,7 @@
 #include "teleport.h"
 #include "databasemanager.h"
 #include "bed.h"
-#include "podium.h"
+//#include "podium.h"
 #include "monster.h"
 #include "scheduler.h"
 #include "databasetasks.h"
