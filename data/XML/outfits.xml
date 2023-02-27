@@ -25,7 +25,6 @@
 	<outfit type="0" looktype="329" name="Newly Wed" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="0" looktype="336" name="Warmaster" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="0" looktype="366" name="Wayfarer" premium="no" unlocked="yes" enabled="yes" />
-	<outfit type="0" looktype="620" name="Goldenx" premium="no" unlocked="yes" enabled="yes" />
 	<!--agregado -->
 	<outfit type="0" looktype="590" name="Old-Citizen" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="0" looktype="591" name="Old-Hunter" premium="no" unlocked="yes" enabled="yes" />
@@ -37,6 +36,7 @@
 		<!-- agregados que no agrege a la lista fememina -->
 	<outfit type="0" looktype="628" name="Dwarven" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="0" looktype="629" name="Golden" premium="no" unlocked="yes" enabled="yes" />
+	<outfit type="0" looktype="620" name="Goldenx" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="0" looktype="630" name="Ancient" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="0" looktype="631" name="Orc" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="0" looktype="632" name="Cipfried" premium="no" unlocked="yes" enabled="yes" />

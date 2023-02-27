@@ -110,7 +110,7 @@ void Connection::accept(Protocol_ptr protocol)
 	this->protocol = protocol;
 
 	g_dispatcher.addTask(createTask([=]() { protocol->onConnect(); }));
-	connectionState = CONNECTION_STATE_GAMEWORLD_AUTH;
+	//connectionState = CONNECTION_STATE_GAMEWORLD_AUTH;
 
 	accept();
 }
@@ -125,7 +125,8 @@ void Connection::accept()
 		// Read size of the first packet
 		boost::asio::async_read(socket,
 
-								boost::asio::buffer(msg.getBuffer(), bufferLength),
+								//boost::asio::buffer(msg.getBuffer(), bufferLength),
+			boost::asio::buffer(msg.getBuffer(), NetworkMessage::HEADER_LENGTH),
 								[thisPtr = shared_from_this()](const boost::system::error_code &error, auto /*bytes_transferred*/) { thisPtr->parseHeader(error); });
 
 	} catch (boost::system::system_error& e) {
