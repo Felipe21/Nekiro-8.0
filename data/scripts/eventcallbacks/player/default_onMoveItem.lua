@@ -1,14 +1,14 @@
 local ec = EventCallback
 
 ec.onMoveItem = function(self, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
-	--[[if item:getAttribute("wrapid") ~= 0 then
-		local tile = Tile(toPosition)
-		if (fromPosition.x ~= CONTAINER_POSITION and toPosition.x ~= CONTAINER_POSITION) or tile and not tile:getHouse() then
-			if tile and not tile:getHouse() then
-				return RETURNVALUE_NOTPOSSIBLE
-			end
-		end
-	end
+--	if item:getAttribute("wrapid") ~= 0 then
+--		local tile = Tile(toPosition)
+--		if (fromPosition.x ~= CONTAINER_POSITION and toPosition.x ~= CONTAINER_POSITION) or tile and not tile:getHouse() then
+--			if tile and not tile:getHouse() then
+--				return RETURNVALUE_NOTPOSSIBLE
+--			end
+--		end
+--	end
 
 	if toPosition.x ~= CONTAINER_POSITION then
 		return RETURNVALUE_NOERROR
@@ -33,7 +33,7 @@ ec.onMoveItem = function(self, item, count, fromPosition, toPosition, fromCylind
 				return moveItem:moveTo(parent) and RETURNVALUE_NOERROR or RETURNVALUE_NOTPOSSIBLE
 			end
 		end
-	end]]
+	end
 
 	return RETURNVALUE_NOERROR
 end
