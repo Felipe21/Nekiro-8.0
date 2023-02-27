@@ -572,7 +572,7 @@ void ProtocolGame::parsePacket(NetworkMessage& msg)
 		//case 0xCB: parseBrowseField(msg); break;
 		case 0xCC: parseSeekInContainer(msg); break;
 		//case 0xCD: break; // request inspect window
-		case 0xD0: parseQuestTracker(msg); break;
+		//case 0xD0: parseQuestTracker(msg); break;
 		case 0xD2: addGameTask([playerID = player->getID()]() { g_game.playerRequestOutfit(playerID); }); break;
 		case 0xD3: parseSetOutfit(msg); break;
 		case 0xD4: parseToggleMount(msg); break;
@@ -856,13 +856,13 @@ void ProtocolGame::parseAutoWalk(NetworkMessage& msg)
 
 void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 {
-	//Outfit_t newOutfit;
-	//newOutfit.lookType = msg.get<uint16_t>();
-	//newOutfit.lookHead = msg.getByte();
-	//newOutfit.lookBody = msg.getByte();
-	//newOutfit.lookLegs = msg.getByte();
-	//newOutfit.lookFeet = msg.getByte();
-	//newOutfit.lookAddons = msg.getByte();
+	Outfit_t newOutfit;
+	newOutfit.lookType = msg.get<uint16_t>();
+	newOutfit.lookHead = msg.getByte();
+	newOutfit.lookBody = msg.getByte();
+	newOutfit.lookLegs = msg.getByte();
+	newOutfit.lookFeet = msg.getByte();
+	newOutfit.lookAddons = msg.getByte();
 //<<<<<<< HEAD
 //msg.get<uint16_t>(); // familiar looktype
 		//addGameTask([=, playerID = player->getID()]() { g_game.playerChangeOutfit(playerID, newOutfit); });
@@ -871,7 +871,7 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 //=======
 
 	// Set outfit window
-	if (outfitType == 0) {
+	/*if (outfitType == 0) {
 		newOutfit.lookMount = msg.get<uint16_t>();
 		if (newOutfit.lookMount != 0) {
 			newOutfit.lookMountHead = msg.getByte();
@@ -887,7 +887,7 @@ void ProtocolGame::parseSetOutfit(NetworkMessage& msg)
 			newOutfit.lookMountBody = currentOutfit.lookMountBody;
 			newOutfit.lookMountLegs = currentOutfit.lookMountLegs;
 			newOutfit.lookMountFeet = currentOutfit.lookMountFeet;
-		}
+		}*/
 
 		msg.get<uint16_t>(); // familiar looktype
 		addGameTask([=, playerID = player->getID()]() { g_game.playerChangeOutfit(playerID, newOutfit); });
