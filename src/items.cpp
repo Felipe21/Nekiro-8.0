@@ -559,7 +559,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 	it.name = itemNode.attribute("name").as_string();
 
 	if (!it.name.empty()) {
-		std::string lowerCaseName = boost::algorithm::to_lower_copy(it.name);
+		std::string lowerCaseName = asLowerCaseString(it.name);
 		if (nameToItems.find(lowerCaseName) == nameToItems.end()) {
 			nameToItems.emplace(std::move(lowerCaseName), id);
 		}
@@ -588,13 +588,13 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 			continue;
 		}
 
-		std::string tmpStrValue = boost::algorithm::to_lower_copy<std::string>(keyAttribute.as_string());
+		std::string tmpStrValue = asLowerCaseString(keyAttribute.as_string());
 		auto parseAttribute = ItemParseAttributesMap.find(tmpStrValue);
 		if (parseAttribute != ItemParseAttributesMap.end()) {
 			ItemParseAttributes_t parseType = parseAttribute->second;
 			switch (parseType) {
 				case ITEM_PARSE_TYPE: {
-					tmpStrValue = boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string());
+					tmpStrValue = asLowerCaseString(valueAttribute.as_string());
 					auto it2 = ItemTypesMap.find(tmpStrValue);
 					if (it2 != ItemTypesMap.end()) {
 						it.type = it2->second;
@@ -682,7 +682,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_FLOORCHANGE: {
-					tmpStrValue = boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string());
+					tmpStrValue = asLowerCaseString(valueAttribute.as_string());
 					auto it2 = TileStatesMap.find(tmpStrValue);
 					if (it2 != TileStatesMap.end()) {
 						it.floorChange |= it2->second;
@@ -693,7 +693,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_CORPSETYPE: {
-					tmpStrValue = boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string());
+					tmpStrValue = asLowerCaseString(valueAttribute.as_string());
 					auto it2 = RaceTypesMap.find(tmpStrValue);
 					if (it2 != RaceTypesMap.end()) {
 						it.corpseType = it2->second;
@@ -709,7 +709,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_FLUIDSOURCE: {
-					tmpStrValue = boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string());
+					tmpStrValue = asLowerCaseString(valueAttribute.as_string());
 					auto it2 = FluidTypesMap.find(tmpStrValue);
 					if (it2 != FluidTypesMap.end()) {
 						it.fluidSource = it2->second;
@@ -741,7 +741,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_WEAPONTYPE: {
-					tmpStrValue = boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string());
+					tmpStrValue = asLowerCaseString(valueAttribute.as_string());
 					auto it2 = WeaponTypesMap.find(tmpStrValue);
 					if (it2 != WeaponTypesMap.end()) {
 						it.weaponType = it2->second;
@@ -752,7 +752,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_SLOTTYPE: {
-					tmpStrValue = boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string());
+					tmpStrValue = asLowerCaseString(valueAttribute.as_string());
 					if (tmpStrValue == "head") {
 						it.slotPosition |= SLOTP_HEAD;
 					} else if (tmpStrValue == "body") {
@@ -784,7 +784,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_AMMOTYPE: {
-					it.ammoType = getAmmoType(boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string()));
+					it.ammoType = getAmmoType(asLowerCaseString(valueAttribute.as_string()));
 					if (it.ammoType == AMMO_NONE) {
 						std::cout << "[Warning - Items::parseItemNode] Unknown ammoType: " << valueAttribute.as_string() << std::endl;
 					}
@@ -792,7 +792,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_SHOOTTYPE: {
-					ShootType_t shoot = getShootType(boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string()));
+					ShootType_t shoot = getShootType(asLowerCaseString(valueAttribute.as_string()));
 					if (shoot != CONST_ANI_NONE) {
 						it.shootType = shoot;
 					} else {
@@ -802,7 +802,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 				}
 
 				case ITEM_PARSE_EFFECT: {
-					MagicEffectClasses effect = getMagicEffect(boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string()));
+					MagicEffectClasses effect = getMagicEffect(asLowerCaseString(valueAttribute.as_string()));
 					if (effect != CONST_ME_NONE) {
 						it.magicEffect = effect;
 					} else {
@@ -1178,7 +1178,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 					CombatType_t combatType = COMBAT_NONE;
 					ConditionDamage* conditionDamage = nullptr;
 
-					tmpStrValue = boost::algorithm::to_lower_copy<std::string>(valueAttribute.as_string());
+					tmpStrValue = asLowerCaseString(valueAttribute.as_string());
 					if (tmpStrValue == "fire") {
 						conditionDamage = new ConditionDamage(CONDITIONID_COMBAT, CONDITION_FIRE);
 						combatType = COMBAT_FIREDAMAGE;
@@ -1218,7 +1218,7 @@ void Items::parseItemNode(const pugi::xml_node& itemNode, uint16_t id)
 								continue;
 							}
 
-							tmpStrValue = boost::algorithm::to_lower_copy<std::string>(subKeyAttribute.as_string());
+							tmpStrValue = asLowerCaseString(subKeyAttribute.as_string());
 							if (tmpStrValue == "initdamage") {
 								initDamage = pugi::cast<int32_t>(subValueAttribute.value());
 							} else if (tmpStrValue == "ticks") {
@@ -1431,7 +1431,7 @@ uint16_t Items::getItemIdByName(const std::string& name)
 		return 0;
 	}
 
-	auto result = nameToItems.find(boost::algorithm::to_lower_copy(name));
+	auto result = nameToItems.find(asLowerCaseString(name));
 	if (result == nameToItems.end())
 		return 0;
 

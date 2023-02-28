@@ -22,10 +22,8 @@
 
 #include "thing.h"
 #include "condition.h"
-
-#include "item.h"
-#include "tools.h"
-
+#include "map.h"
+#include "baseevents.h"
 
 #include <utility>
 #include <valarray>
